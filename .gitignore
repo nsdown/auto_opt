@@ -4,4 +4,5 @@
 venv
 screen_cap/
 wechat/*.txt
-out/
+out
+*.py___jb_tmp___

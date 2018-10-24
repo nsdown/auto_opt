@@ -1,4 +1,3 @@
-#!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 '''
 @ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(wechat:Efon-fighting)
