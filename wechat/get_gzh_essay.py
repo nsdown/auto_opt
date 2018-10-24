@@ -28,7 +28,7 @@ scrollOffsite = scrollOffsiteList[deviceName]
 CapXSize = adb.getScreenCapSize()[0]
 CapYSize = adb.getScreenCapSize()[1]
 
-def getEssay():
+def getEssay(fileName, isToButtom):
     '''
     @ 获取公众号所有历史文章，入口。
     @
@@ -47,9 +47,10 @@ def getEssay():
     adb.runAdbCmd('shell am startservice ca.zgrs.clipper/.ClipboardService') #开启粘贴板adb通信service
 
     #-> 滑动到底部
-    scrollToButtom()
+    if(isToButtom):
+        scrollToButtom()
 
-    fh = open('wechat/get_gzh_essay_result'+ '' +'.txt', 'w+', encoding='utf-8')
+    fh = open(fileName, 'a+', encoding='utf-8')
     while True:
         timeStart = datetime.datetime.now()
         capPath = 'screen_cap/screencap.png'
@@ -74,7 +75,9 @@ def getEssay():
                 if(textEnd[0:4] == '历史消息'):
                     print('getEssay End.')
                     getEssaytimeEnd = datetime.datetime.now()
-                    print('Total time: ' + (getEssaytimeEnd - getEssaytimeStart).seconds)  # 时间差
+                    timeDelta = (getEssaytimeEnd - getEssaytimeStart).seconds
+                    print('Total time: ' + str(int(timeDelta / 3600)) + 'h' + str(int(timeDelta / 60) % 60) + 'm' + str((timeDelta % 60)) + 's')  # 时间差
+
                     fh.close()
                     exit(0)
                 else:
@@ -114,7 +117,7 @@ def getEssay():
         # 获取网址---end---
 
         time.sleep(1)  # 反应时间
-        adb.runAdbCmd('shell input keyevent KEYCODE_BACK') # 存在偶现不起作用的问题
+        adb.runAdbCmd('shell input keyevent KEYCODE_BACK') # [bug]存在偶现不起作用的问题
         time.sleep(1) #反应时间
 
         fh.write(text + ' : ' + textLink + '\n')
@@ -131,7 +134,7 @@ def getEssay():
 
     getEssaytimeEnd = datetime.datetime.now()
     timeDelta = (getEssaytimeEnd - getEssaytimeStart).seconds
-    print('Total time(s): ' + str(int(timeDelta / 3600)) + 'h' + str(int(timeDelta / 60) % 60) + 'm' + str((timeDelta % 60)) + 's')  # 时间差
+    print('Total time: ' + str(int(timeDelta / 3600)) + 'h' + str(int(timeDelta / 60) % 60) + 'm' + str((timeDelta % 60)) + 's')  # 时间差
 
 def scrollToButtom():
     '''

@@ -4,3 +4,4 @@
 venv
 screen_cap/
 wechat/*.txt
+out/

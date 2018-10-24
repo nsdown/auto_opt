@@ -12,7 +12,7 @@ import webbrowser
 import datetime
 
 
-def url2pdf(filePath):
+def url2pdfLinux(filePath, startLine, endLine):
     '''
     @ 通过(title : url)文档打印为pdf文档
     @
@@ -20,11 +20,15 @@ def url2pdf(filePath):
     @
     @ param
     @ exception
-    @ notice 默认浏览器为firefox
+    @ notice 默认浏览器需要为firefox
     '''
     url2pdfStart = datetime.datetime.now()
-
+    cnt = 0
     for line in open(filePath):
+        cnt = cnt + 1
+        if ((cnt < startLine) | (cnt > endLine)):
+            continue
+
         webbrowser.open(line.split(' : ', 2)[1])
         virtkey_func.tapPageDownToEnd() #让图片缓冲出来
         time.sleep(2) # 让网页缓冲完成
@@ -53,4 +57,4 @@ def url2pdf(filePath):
     #统计耗时
     url2pdfEnd = datetime.datetime.now()
     timeDelta = (url2pdfEnd - url2pdfStart).seconds
-    print('Total time(s): ' + str(int(timeDelta / 3600)) + 'h' + str(int(timeDelta / 60) % 60) + 'm' + str((timeDelta % 60)) + 's')   # 时间差
+    print('Total time: ' + str(int(timeDelta / 3600)) + 'h' + str(int(timeDelta / 60) % 60) + 'm' + str((timeDelta % 60)) + 's')   # 时间差
