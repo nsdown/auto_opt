@@ -3,7 +3,8 @@
 @ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(wechat:Efon-fighting)
 @
 @ env stetup：
-@ sudo apt install tesseract-ocr
+@ sudo apt install tesseract-ocr 下载chi_sim.traineddata 放到/usr/share/tesseract-ocr/4.00/tessdata
+(windows安装完后需要配置PATH,然后下载chi_sim.traineddata 放到C:\Program Files (x86)\Tesseract-OCR\tessdata),
 @ pip3 install pillow pytesseract matplotlib
 @ 需要安装app : https://github.com/majido/clipper
 @ 0.screenSize:720x1280 DPI:320

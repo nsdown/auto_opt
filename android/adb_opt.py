@@ -30,9 +30,11 @@ class AdbOpt():
                              }
         self.deviceId = '' #创建类之后需要赋值 deviceId
         if platform.system() == 'Windows':
-            adbToolPath = os.path.join('Tools', "adb", 'adb.exe')
+            adbToolPath = os.path.join("adb")
+            self.option = ''
         elif platform.system() == 'Linux':
             adbToolPath = '/home/soy/Android/Sdk/platform-tools/adb'
+            self.option = ' -s ' + self.deviceId
         else:
             print('Host OS is not compatible.\n')
             exit(1)
@@ -81,7 +83,7 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + ' -s ' + self.deviceId +' shell wm size')
+        process = os.popen(self.adbToolPath + self.option +' shell wm size')
         output = process.read()
         return output
 
@@ -95,7 +97,7 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + ' -s ' + self.deviceId +' shell wm density')
+        process = os.popen(self.adbToolPath + self.option +' shell wm density')
         output = process.read()
         return output
 
@@ -109,7 +111,7 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + ' -s ' + self.deviceId +' shell getprop ro.product.device')
+        process = os.popen(self.adbToolPath + self.option +' shell getprop ro.product.device')
         output = process.read()
         return output
 
@@ -123,7 +125,7 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + ' -s ' + self.deviceId +' shell getprop ro.build.version.release')
+        process = os.popen(self.adbToolPath + self.option +' shell getprop ro.build.version.release')
         output = process.read()
         return output
 
@@ -172,7 +174,7 @@ Python          :{python}
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + ' -s ' + self.deviceId +' shell wm size')
+        process = os.popen(self.adbToolPath + self.option +' shell wm size')
         output = process.read().replace(' ', '').replace('\n', '').split(':')
         x = output[len(output)-1].split('x')[0]
         y = output[len(output)-1].split('x')[1]
