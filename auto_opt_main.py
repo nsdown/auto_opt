@@ -13,7 +13,7 @@ def main():
     print(caseFlg)
 
     if(caseFlg == 'getPointAxis'):
-        from windows_pc import screen_coordinate
+        from pc_windows import screen_coordinate
         screen_coordinate.getPointAxis()
 
     if(caseFlg == 'getEssay'):

@@ -5,7 +5,7 @@
 @ env stetup：
 @
 '''
-from linux_pc import virtkey_func
+from pc_linux import virtkey_func
 import time
 import webbrowser
 import datetime
