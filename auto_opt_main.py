@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 '''
-@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(wechat:Efon-fighting)
+@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(android_wechat:Efon-fighting)
 @
 @ env stetup：
-@ sudo apt-get install python3-pip
+@   sudo apt-get install python3-pip
 @
 '''
 
 def main():
     print("main start.")
-    caseFlg = 'getEssay'
+    caseFlg = 'getPointAxis'
     print(caseFlg)
 
+    if(caseFlg == 'getPointAxis'):
+        from windows_pc import screen_coordinate
+        screen_coordinate.getPointAxis()
+
     if(caseFlg == 'getEssay'):
-        from wechat import get_gzh_essay
+        from android_wechat import get_gzh_essay
         get_gzh_essay.getEssay('out/renmingribao.txt',False)
 
     if (caseFlg == 'url2pdf'):

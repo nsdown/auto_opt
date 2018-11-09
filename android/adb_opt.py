@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(wechat:Efon-fighting)
+@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(android_wechat:Efon-fighting)
 @
 @ env stetup：
 @  pip3 install aircv opencv-python

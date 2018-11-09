@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(wechat:Efon-fighting)
+@ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(android_wechat:Efon-fighting)
 @
 @ env stetup：
 @ sudo apt install tesseract-ocr 下载chi_sim.traineddata 放到/usr/share/tesseract-ocr/4.00/tessdata
@@ -99,13 +99,13 @@ def getEssay(fileName, isToButtom):
 
         while(flgPos == None): #等待界面出现
             time.sleep(1)
-            flgPos = adb.FindFlgFromCap('wechat/flag_pic/00_dot_option.png',0.85)
+            flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_dot_option.png',0.85)
         adb.adbTap(flgPos[0], flgPos[1])
         flgPos = None
 
         while (flgPos == None): #等待界面出现
             time.sleep(1)
-            flgPos = adb.FindFlgFromCap('wechat/flag_pic/00_cp_link.png', 0.85)
+            flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_cp_link.png', 0.85)
         adb.adbTap(flgPos[0], flgPos[1])
         flgPos = None
 
@@ -150,7 +150,7 @@ def scrollToButtom():
     while True:
         adb.adbSwipe(CapXSize / 2, CapYSize * 4 / 5,
                      CapXSize / 2, CapYSize / 5, 100)
-        if(adb.FindFlgFromCap('wechat/flag_pic/00_no_more.png', 0.8) != None):
+        if(adb.FindFlgFromCap('android_wechat/flag_pic/00_no_more.png', 0.8) != None):
             print('scroll to end OK.')
             break
 
