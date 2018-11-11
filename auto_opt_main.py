@@ -8,9 +8,13 @@
 '''
 
 def main():
-    print("main start.")
-    caseFlg = 'getPointAxis'
+    print("main start")
+    caseFlg = 'getUrl2Txt'
     print(caseFlg)
+
+    if (caseFlg == 'getUrl2Txt'):
+        from android import getUrl2Txt
+        getUrl2Txt.getUrl2Txt()
 
     if(caseFlg == 'getPointAxis'):
         from pc_windows import screen_coordinate
