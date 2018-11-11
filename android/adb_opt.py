@@ -192,8 +192,7 @@ Python          :{python}
         @ notice
         '''
         command = '{} {}'.format(self.adbToolPath, rawCommand)
-        process = os.popen(command)
-        output = process.read()
+        output = subprocess.getoutput(command)
         return output
 
     def pullScreenShot(self, savePath):
