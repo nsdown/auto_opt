@@ -9,12 +9,12 @@
 
 def main():
     print("main start")
-    caseFlg = 'getUrl2Txt'
+    caseFlg = 'douyin'
     print(caseFlg)
 
-    if (caseFlg == 'getUrl2Txt'):
-        from android import getClipper2Txt
-        getClipper2Txt.getUrl2Txt()
+    if (caseFlg == 'douyin'):
+        from android_douyin import douyin
+        douyin.getUrl()
 
     if(caseFlg == 'getPointAxis'):
         from pc_windows import screen_coordinate

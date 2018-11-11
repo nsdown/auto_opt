@@ -83,8 +83,8 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + self.option +' shell wm size')
-        output = process.read()
+        process = subprocess.getoutput(self.adbToolPath + self.option +' shell wm size')
+        output = process
         return output
 
     def getScreenDensity(self):
@@ -97,8 +97,8 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + self.option +' shell wm density')
-        output = process.read()
+        process = subprocess.getoutput(self.adbToolPath + self.option +' shell wm density')
+        output = process
         return output
 
     def getDeviceInfo(self):
@@ -111,8 +111,8 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + self.option +' shell getprop ro.product.device')
-        output = process.read()
+        process = subprocess.getoutput(self.adbToolPath + self.option +' shell getprop ro.product.device')
+        output = process
         return output
 
     def getDeviceOsInfo(self):
@@ -125,8 +125,8 @@ class AdbOpt():
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + self.option +' shell getprop ro.build.version.release')
-        output = process.read()
+        process = subprocess.getoutput(self.adbToolPath + self.option +' shell getprop ro.build.version.release')
+        output = process
         return output
 
     def dumpDeviceInfo(self):
@@ -174,8 +174,8 @@ Python          :{python}
         @ exception
         @ notice
         '''
-        process = os.popen(self.adbToolPath + self.option +' shell wm size')
-        output = process.read().replace(' ', '').replace('\n', '').split(':')
+        process = subprocess.getoutput(self.adbToolPath + self.option +' shell wm size')
+        output = process.replace(' ', '').replace('\n', '').split(':')
         x = output[len(output)-1].split('x')[0]
         y = output[len(output)-1].split('x')[1]
         size = [int(x),int(y)]
@@ -276,8 +276,8 @@ Python          :{python}
         @ exception
         @ notice    必须像素点匹配
         '''
-        process = os.popen('date +%m%d%H%M%S')
-        date = process.read().replace('\n','')
+        #process = subprocess.getoutput('date +%m%d%H%M%S')
+        #date = process.replace('\n','')
         date = '' #不保存时间戳
         screenshotPath = self.pullScreenShot('screen_cap/screencap'+date+'.png') # eg. screen_cap/cap1006120638.png
         print(screenshotPath)
@@ -304,9 +304,11 @@ Python          :{python}
         @ exception
         @ notice    必须像素点匹配
         '''
-        flgCenterPosInt = self.FindFlgFromPic(flgPath, confidenceVTH)
+        flgCenterPosInt = self.FindFlgFromCap(flgPath, confidenceVTH)
         if (flgCenterPosInt != None):
             self.adbTap(flgCenterPosInt[0], flgCenterPosInt[1])
             return True
         else:
             return False
+
+adbIns = AdbOpt()
