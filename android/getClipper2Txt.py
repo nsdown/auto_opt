@@ -7,7 +7,7 @@ def getUrl2Txt():
     adb.runAdbCmd('shell am startservice ca.zgrs.clipper/.ClipboardService')  # 开启粘贴板adb通信service
     fh = open("out/douyi_rul.txt", 'a+', encoding='utf-8')
     while True:
-        #print('按 a 复制粘贴板内容到PC本地文件；按 q 退出。。。')
+        print('按"enter"复制粘贴板内容到PC本地文件；按 q 退出。。。')
         str = input()
         print(str)
         if str == 'a':
@@ -17,7 +17,7 @@ def getUrl2Txt():
             print(textLink)
             fh.write(textLink + '\n')
         if str == 'q':
-            #print('退出。。')
+            print('退出。。')
             break
 
     fh.close()

@@ -13,8 +13,8 @@ def main():
     print(caseFlg)
 
     if (caseFlg == 'getUrl2Txt'):
-        from android import getUrl2Txt
-        getUrl2Txt.getUrl2Txt()
+        from android import getClipper2Txt
+        getClipper2Txt.getUrl2Txt()
 
     if(caseFlg == 'getPointAxis'):
         from pc_windows import screen_coordinate
