@@ -31,8 +31,9 @@ def getDouyinUrl2Txt(saveFilePath):
     fh = open(saveFilePath, 'a+', encoding='utf-8')
 
     textLink = getClipper()
-    textLink = textLink.split('#',5)[2].split('复制此链接',5)[0].strip()
-    textLink = textLink.replace(" http","-->http")
+    textLink = textLink.split('#在抖音，记录美好生活#',5)[1].split('复制此链接',5)[0].strip()
+    textLink = textLink.replace(" http","-->http").strip()
+    textLink = textLink.replace("@抖音小助手","").strip()
     print(textLink)
     fh.write(textLink + '\n')
 
