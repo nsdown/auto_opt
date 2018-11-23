@@ -13,6 +13,16 @@ from android.adb_opt import adbIns
 import time
 
 def getUrl():
+    '''
+     @ 不断往下滑，依次点击“复制链接”
+     @
+     @ return clipper
+     @
+     @ param
+     @ exception
+     @ notice
+     @      每步操作之间用延时处理，复制链接时要求：网速好，系统流畅；
+     '''
     #adbIns.pullScreenShot('screen_cap')
     print('press any key to start...')
     input()

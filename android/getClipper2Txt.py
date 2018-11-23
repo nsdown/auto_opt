@@ -20,7 +20,7 @@ def getClipper():
 
 def getDouyinUrl2Txt(saveFilePath):
     '''
-     @ 获取douyin app视频“标题 地址”
+     @ 获取douyin app视频“标题-->描述-->地址”
      @
      @ return str
      @
@@ -28,6 +28,7 @@ def getDouyinUrl2Txt(saveFilePath):
      @ exception
      @ notice
      '''
+    fileLine = '%05d' % (len(open(saveFilePath, 'r', encoding='utf-8').readlines()) + 1)
     fh = open(saveFilePath, 'a+', encoding='utf-8')
 
     textLink = getClipper()
@@ -35,7 +36,7 @@ def getDouyinUrl2Txt(saveFilePath):
     textLink = textLink.replace(" http","-->http").strip()
     textLink = textLink.replace("@抖音小助手","").strip()
     print(textLink)
-    fh.write(textLink + '\n')
+    fh.write(fileLine + "-->" + textLink + '\n')
 
     fh.close()
     print('getDouyinUrl2Txt ok.')
