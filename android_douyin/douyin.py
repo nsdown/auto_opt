@@ -12,6 +12,30 @@ from android import getClipper2Txt
 from android.adb_opt import adbIns
 import time
 
+
+def getDouyinUrl2Txt(saveFilePath):
+    '''
+     @ 获取douyin app视频“标题-->描述-->地址”
+     @
+     @ return str
+     @
+     @ param
+     @ exception
+     @ notice
+     '''
+    fileLine = '%05d' % (len(open(saveFilePath, 'r', encoding='utf-8').readlines()) + 1)
+    fh = open(saveFilePath, 'a+', encoding='utf-8')
+
+    textLink = getClipper2Txt.getClipper()
+    textLink = textLink.split('#在抖音，记录美好生活#',5)[1].split('复制此链接',5)[0].strip()
+    textLink = textLink.replace(" http","-->http").strip()
+    textLink = textLink.replace("@抖音小助手","").strip()
+    print(textLink)
+    fh.write(fileLine + "-->" + textLink + '\n')
+
+    fh.close()
+    print('getDouyinUrl2Txt ok.')
+
 def getUrl():
     '''
      @ 不断往下滑，依次点击“复制链接”
@@ -37,5 +61,5 @@ def getUrl():
         time.sleep(0.3)
         adbIns.tapFlgFromPic('android_douyin\pic_flag\cp_link.png', 0.75)
         time.sleep(1)
-        getClipper2Txt.getDouyinUrl2Txt("out/douyi_rul.txt")
+        getDouyinUrl2Txt("out/douyi_rul.txt")
         time.sleep(0.5)
