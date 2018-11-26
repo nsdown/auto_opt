@@ -13,7 +13,7 @@ from android.adb_opt import adbIns
 import time
 
 
-def getDouyinUrl2Txt(saveFilePath):
+def saveDouyinUrl2Txt(saveFilePath):
     '''
      @ 获取douyin app视频“标题-->描述-->地址”
      @
@@ -36,7 +36,7 @@ def getDouyinUrl2Txt(saveFilePath):
     fh.close()
     print('getDouyinUrl2Txt ok.')
 
-def getUrl():
+def getUrl(savePath):
     '''
      @ 不断往下滑，依次点击“复制链接”
      @
@@ -61,5 +61,103 @@ def getUrl():
         time.sleep(0.3)
         adbIns.tapFlgFromPic('android_douyin\pic_flag\cp_link.png', 0.75)
         time.sleep(1)
-        getDouyinUrl2Txt("out/douyi_rul.txt")
+        saveDouyinUrl2Txt(savePath)
         time.sleep(0.5)
+
+def getVideoFromTxt(txtPath, startLine, endLine):
+    '''
+    @ 解析txt字段，在浏览器下载无水印视频
+    @
+    @ return null
+    @
+    @ param
+    @ exception
+    @ notice
+    @
+    '''
+    __browser_url = r'C:\Users\soy\AppData\Roaming\360se6\Application\360se.exe'  ##360浏览器的地址
+    chrome_options = Options()
+    chrome_options.binary_location = __browser_url
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+
+    driver.get("http://douyin.iiilab.com/")
+    time.sleep(3) # 经验值，根据网速调整
+
+    cnt = 0
+    for line in open(txtPath, encoding='utf-8'):
+        cnt = cnt + 1
+        print(line)
+        if ((cnt < startLine) | (cnt > endLine) | (len(line.split('-->')) != 3)): # 容错
+            continue
+
+        inputUrl = driver.find_element_by_class_name('link-input') # 输入框
+        inputUrl.send_keys(line.split('-->', 4)[2])
+        time.sleep(0.5)
+
+        analysisBtn = driver.find_element_by_class_name('input-group-btn') # 解析按钮
+        analysisBtn.click()
+        time.sleep(4)
+
+        downloadBtn = driver.find_element_by_class_name('btn-success')  # 下载按钮
+        urlSite = downloadBtn.get_attribute('href')
+        print(urlSite)
+        urllib.request.urlretrieve(urlSite, filename='C:\\Users\\soy\\Downloads\\%s.mp4' % line.split('-->', 4)[0], reporthook=None, data=None)
+        print('download %s.mp4 ok' % line.split('-->', 4)[0])
+        time.sleep(1)
+
+def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
+    '''
+    @ 上传视频到
+    @
+    @ return null
+    @
+    @ param
+    @ exception
+    @ notice
+    @   需要先打开全民小视频首页，
+    @   需要安装ADBKeyboard.app支持adb中文输入
+    '''
+    print('uploadVideo start.')
+    adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME') #切换输入法
+    pushVideo_quanmin_axis = (270, 930) # 全民小视频发视频按钮
+    selectVideo_quanmin_axis = (450, 880) # 选视频按钮
+    firstVideo_quanmin_axis = (65, 250) # 选取第一个视频
+    nextStep1_quanmin_axis = (480, 800) # 下一步
+    nextStep2_quanmin_axis = (450, 880) # 下一步
+    describe_quanmin_axis = (200, 200) # 视频描述
+    fabu_quanmin_axis = (260, 810) # 发布
+
+    for idx in range(stardIdx, endIdx):
+        IdxName = ('%03d' % idx)
+        print("push %s/%s.mp4 /sdcard/Movies/quanmin.mp4" % (videoPath, IdxName))
+        adbIns.runAdbCmd("push %s/%s.mp4 /sdcard/Movies/quanmin.mp4" % (videoPath, IdxName))
+        #adbIns.runAdbCmd("push %s/002.mp4 /sdcard/Movies" % (videoPath))
+        adbIns.adbTap(pushVideo_quanmin_axis[0], pushVideo_quanmin_axis[1])
+        time.sleep(2)
+        adbIns.adbTap(selectVideo_quanmin_axis[0], selectVideo_quanmin_axis[1])
+        time.sleep(2)
+        adbIns.adbTap(firstVideo_quanmin_axis[0], firstVideo_quanmin_axis[1])
+        time.sleep(2)
+        adbIns.adbTap(nextStep1_quanmin_axis[0], nextStep1_quanmin_axis[1])
+        time.sleep(2)
+        adbIns.adbTap(nextStep2_quanmin_axis[0], nextStep2_quanmin_axis[1])
+        time.sleep(2)
+        adbIns.adbTap(describe_quanmin_axis[0], describe_quanmin_axis[1])
+        time.sleep(1)
+        adbIns.adbTap(describe_quanmin_axis[0], describe_quanmin_axis[1])
+
+        # 获取描述
+        urlTxtFd = open(urlTxtPath, 'r', encoding='utf-8')
+        lineTemps = urlTxtFd.readlines()
+        for lineTemp in lineTemps:
+            if (lineTemp.find(IdxName) != -1):
+                describeText = lineTemp.split('-->',5)[1]
+                print(IdxName + ':' + describeText)
+                adbIns.runAdbCmd("shell am broadcast -a ADB_INPUT_TEXT --es msg %s" % (describeText))
+                break
+
+        time.sleep(20)
+        adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1])
+        time.sleep(10)
+
+    adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME')  # 切换为讯飞输入法
