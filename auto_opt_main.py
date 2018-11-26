@@ -15,8 +15,8 @@ def main():
     if (caseFlg == 'douyin'):
         from android_douyin import douyin
         urlTxtPath = "out/douyin_Sia.txt"
-        douyin.getUrl(urlTxtPath)
-        #douyin.getVideoFromTxt("out/douyin_Sia.txt", 62, 80)
+        #douyin.getUrl(urlTxtPath)
+        douyin.getVideoFromTxt("out/douyin_Sia.txt", 1, 80)
         #douyin.uploadVideo2qQunmin('out/douyin_Sia.txt', '/home/soy/Documents/yangyang',2, 5)
 
 

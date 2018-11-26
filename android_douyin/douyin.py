@@ -11,6 +11,9 @@
 from android import getClipper2Txt
 from android.adb_opt import adbIns
 import time
+from selenium import webdriver
+import urllib
+import urllib.request
 
 
 def saveDouyinUrl2Txt(saveFilePath):
@@ -81,7 +84,7 @@ def getVideoFromTxt(txtPath, startLine, endLine):
     @
     '''
     __browser_url = r'C:\Users\soy\AppData\Roaming\360se6\Application\360se.exe'  ##360浏览器的地址
-    chrome_options = Options()
+    chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = __browser_url
     driver = webdriver.Chrome(chrome_options=chrome_options)
 
