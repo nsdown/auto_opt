@@ -14,11 +14,11 @@ def main():
 
     if (caseFlg == 'douyin'):
         from android_douyin import douyin
-        urlTxtPath = "out/douyin_Sia.txt"
-        #douyin.getUrlFromDouyin(urlTxtPath)
+        urlTxtPath = "/home/soy/03_autoOpt_docs/douyin_Ina.txt"
+        douyin.getUrlFromDouyin(urlTxtPath)
         #douyin.getVideoFromTxt("out/douyin_Sia.txt", 1, 80)
-        douyin.uploadVideo2Qunmin('/home/soy/Videos/sihaiweijiazaiouzhou/sihaiweijiazaiouzhou.txt',
-                                  '/home/soy/Videos/sihaiweijiazaiouzhou',26, 29)
+        #douyin.uploadVideo2Qunmin('/home/soy/Videos/sihaiweijiazaiouzhou/sihaiweijiazaiouzhou.txt',
+        #                          '/home/soy/Videos/sihaiweijiazaiouzhou',26, 29)
 
 
     if(caseFlg == 'getPointAxis'):

@@ -53,7 +53,7 @@ def getUrlFromDouyin(savePath):
      @ param
      @ exception
      @ notice
-     @      windows函数，picFlg路径是windows格式
+     @      linux函数，picFlg路径是linux格式
      @      每步操作之间用延时处理，复制链接时要求：网速好，系统流畅；
      '''
     #adbIns.pullScreenShot('screen_cap')
@@ -64,11 +64,11 @@ def getUrlFromDouyin(savePath):
         #input()
         adbIns.adbSwipe(100, 600, 100, 30, 500)
         time.sleep(0.3)
-        adbIns.tapFlgFromPic('android_douyin\pic_flag\share.png',0.75)
+        adbIns.tapFlgFromPic('android_douyin/pic_flag/share.png',0.75)
         time.sleep(1)
         adbIns.adbSwipe(500, 800, 10, 800, 500)
         time.sleep(0.3)
-        adbIns.tapFlgFromPic('android_douyin\pic_flag\cp_link.png', 0.75)
+        adbIns.tapFlgFromPic('android_douyin/pic_flag/cp_link.png', 0.75)
         time.sleep(1)
         saveDouyinUrl2Txt(savePath)
         time.sleep(0.5)
