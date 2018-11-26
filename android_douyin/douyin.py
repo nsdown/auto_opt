@@ -23,7 +23,12 @@ def saveDouyinUrl2Txt(saveFilePath):
      @ exception
      @ notice
      '''
-    fileLine = '%05d' % (len(open(saveFilePath, 'r', encoding='utf-8').readlines()) + 1)
+    try:
+        fileLine = '%05d' % (len(open(saveFilePath, 'r', encoding='utf-8').readlines()) + 1)
+    except:
+        print('文件不存在')
+        fileLine = '00001'
+
     fh = open(saveFilePath, 'a+', encoding='utf-8')
 
     textLink = getClipper2Txt.getClipper()

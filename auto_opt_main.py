@@ -14,10 +14,10 @@ def main():
 
     if (caseFlg == 'douyin'):
         from android_douyin import douyin
-        urlTxtPath = "out/抖音_四海为家在欧洲.txt"
+        urlTxtPath = "out/douyin_Sia.txt"
         douyin.getUrl(urlTxtPath)
-        #douyin.getVideoFromTxt("out/抖音_四海为家在欧洲.txt", 62, 80)
-        #douyin.uploadVideo2qQunmin('out/抖音_四海为家在欧洲.txt', '/home/soy/Documents/yangyang',2, 5)
+        #douyin.getVideoFromTxt("out/douyin_Sia.txt", 62, 80)
+        #douyin.uploadVideo2qQunmin('out/douyin_Sia.txt', '/home/soy/Documents/yangyang',2, 5)
 
 
     if(caseFlg == 'getPointAxis'):
