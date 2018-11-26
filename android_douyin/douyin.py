@@ -44,7 +44,7 @@ def saveDouyinUrl2Txt(saveFilePath):
     fh.close()
     print('getDouyinUrl2Txt ok.')
 
-def getUrl(savePath):
+def getUrlFromDouyin(savePath):
     '''
      @ 不断往下滑，依次点击“复制链接”
      @
@@ -53,6 +53,7 @@ def getUrl(savePath):
      @ param
      @ exception
      @ notice
+     @      windows函数，picFlg路径是windows格式
      @      每步操作之间用延时处理，复制链接时要求：网速好，系统流畅；
      '''
     #adbIns.pullScreenShot('screen_cap')
@@ -81,6 +82,7 @@ def getVideoFromTxt(txtPath, startLine, endLine):
     @ param
     @ exception
     @ notice
+    @   windows函数，webdriver需要windows环境
     @
     '''
     __browser_url = r'C:\Users\soy\AppData\Roaming\360se6\Application\360se.exe'  ##360浏览器的地址
@@ -104,7 +106,7 @@ def getVideoFromTxt(txtPath, startLine, endLine):
 
         analysisBtn = driver.find_element_by_class_name('input-group-btn') # 解析按钮
         analysisBtn.click()
-        time.sleep(4)
+        time.sleep(8)
 
         downloadBtn = driver.find_element_by_class_name('btn-success')  # 下载按钮
         urlSite = downloadBtn.get_attribute('href')
@@ -113,7 +115,7 @@ def getVideoFromTxt(txtPath, startLine, endLine):
         print('download %s.mp4 ok' % line.split('-->', 4)[0])
         time.sleep(1)
 
-def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
+def uploadVideo2Qunmin(urlTxtPath, videoPath, stardIdx, endIdx):
     '''
     @ 上传视频到
     @
@@ -122,24 +124,41 @@ def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
     @ param
     @ exception
     @ notice
+    @   linux函数，中文输入需要linux adb才支持
     @   需要先打开全民小视频首页，
     @   需要安装ADBKeyboard.app支持adb中文输入 ‘adb shell ime list -s 查看输入法’
+    @       https://github.com/senzhk/ADBKeyBoard
+    @   视频描述里不能有‘()’ 和空格
     '''
     print('uploadVideo start.')
-    adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME') #切换输入法
+    adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME') #切换输入法，需要输入中文
+
+    # 960 * 540  (320) -------Axis start-------
     pushVideo_quanmin_axis = (270, 930) # 全民小视频发视频按钮
     selectVideo_quanmin_axis = (450, 880) # 选视频按钮
     firstVideo_quanmin_axis = (65, 250) # 选取第一个视频
     nextStep1_quanmin_axis = (480, 800) # 下一步
     nextStep2_quanmin_axis = (450, 880) # 下一步
     describe_quanmin_axis = (200, 200) # 视频描述
+    upload_quanmin_axis = (450, 220) # 重新加载视频
     fabu_quanmin_axis = (260, 810) # 发布
+    # 960 * 540  (320) -------Axis end-------
 
     for idx in range(stardIdx, endIdx):
-        IdxName = ('%03d' % idx)
-        print("push %s/%s.mp4 /sdcard/Movies/quanmin.mp4" % (videoPath, IdxName))
-        adbIns.runAdbCmd("push %s/%s.mp4 /sdcard/Movies/quanmin.mp4" % (videoPath, IdxName))
-        #adbIns.runAdbCmd("push %s/002.mp4 /sdcard/Movies" % (videoPath))
+        IdxName = ('%05d' % idx)
+        filePath = '%s/%s.mp4' % (videoPath,IdxName)
+        print("%s" % filePath)
+
+        # 判断文件是否存在，存在则传到并覆盖到手机端
+        try:
+            f = open(filePath)
+            f.close()
+            adbIns.runAdbCmd("push %s /sdcard/Movies/quanmin.mp4" % filePath)
+        except IOError:
+            print("%s is not accessible." % filePath)
+            continue
+
+        # 传视频
         adbIns.adbTap(pushVideo_quanmin_axis[0], pushVideo_quanmin_axis[1])
         time.sleep(2)
         adbIns.adbTap(selectVideo_quanmin_axis[0], selectVideo_quanmin_axis[1])
@@ -149,12 +168,11 @@ def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
         adbIns.adbTap(nextStep1_quanmin_axis[0], nextStep1_quanmin_axis[1])
         time.sleep(2)
         adbIns.adbTap(nextStep2_quanmin_axis[0], nextStep2_quanmin_axis[1])
-        time.sleep(2)
-        adbIns.adbTap(describe_quanmin_axis[0], describe_quanmin_axis[1])
         time.sleep(1)
+        adbIns.adbTap(upload_quanmin_axis[0], upload_quanmin_axis[1])
         adbIns.adbTap(describe_quanmin_axis[0], describe_quanmin_axis[1])
 
-        # 获取描述
+        # 获取并填入视频描述
         urlTxtFd = open(urlTxtPath, 'r', encoding='utf-8')
         lineTemps = urlTxtFd.readlines()
         for lineTemp in lineTemps:
@@ -164,8 +182,13 @@ def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
                 adbIns.runAdbCmd("shell am broadcast -a ADB_INPUT_TEXT --es msg %s" % (describeText))
                 break
 
-        time.sleep(20)
+        # 等待上传完成并发布
+        xiugaifengmianFlg = None
+        while (xiugaifengmianFlg == None):
+            print('uploading...pls wait.')
+            time.sleep(2)
+            xiugaifengmianFlg = adbIns.FindFlgFromCap('android_douyin/pic_flag/xiugaifengmian.png', 0.9)
         adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1])
-        time.sleep(10)
+        time.sleep(10) # 发布随网络情况而耗时不同
 
     adbIns.runAdbCmd('shell ime set com.iflytek.inputmethod/.FlyIME')  # 切换为讯飞输入法
