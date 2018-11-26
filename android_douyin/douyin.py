@@ -115,7 +115,7 @@ def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
     @ exception
     @ notice
     @   需要先打开全民小视频首页，
-    @   需要安装ADBKeyboard.app支持adb中文输入
+    @   需要安装ADBKeyboard.app支持adb中文输入 ‘adb shell ime list -s 查看输入法’
     '''
     print('uploadVideo start.')
     adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME') #切换输入法
@@ -160,4 +160,4 @@ def uploadVideo2qQunmin(urlTxtPath, videoPath, stardIdx, endIdx):
         adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1])
         time.sleep(10)
 
-    adbIns.runAdbCmd('shell ime set com.android.adbkeyboard/.AdbIME')  # 切换为讯飞输入法
+    adbIns.runAdbCmd('shell ime set com.iflytek.inputmethod/.FlyIME')  # 切换为讯飞输入法
