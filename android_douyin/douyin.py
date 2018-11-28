@@ -158,7 +158,6 @@ def uploadVideo2Qunmin(urlTxtPath, videoPath, stardIdx, endIdx):
             print("%s is not accessible." % filePath)
             continue
 
-        # 传视频
         adbIns.adbTap(pushVideo_quanmin_axis[0], pushVideo_quanmin_axis[1])
         time.sleep(2)
         adbIns.adbTap(selectVideo_quanmin_axis[0], selectVideo_quanmin_axis[1])
@@ -189,7 +188,8 @@ def uploadVideo2Qunmin(urlTxtPath, videoPath, stardIdx, endIdx):
             print('uploading...pls wait.')
             time.sleep(2)
             xiugaifengmianFlg = adbIns.FindFlgFromCap('android_douyin/pic_flag/xiugaifengmian.png', 0.9)
-        adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1])
-        time.sleep(10) # 发布随网络情况而耗时不同
+        adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1]) # 传视频
+        while (adbIns.FindFlgFromCap('android_douyin/pic_flag/chuanshipin.png', 0.7) == None):
+            time.sleep(2)
 
     adbIns.runAdbCmd('shell ime set com.iflytek.inputmethod/.FlyIME')  # 切换为讯飞输入法
