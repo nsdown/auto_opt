@@ -185,6 +185,7 @@ def uploadVideo2Qunmin(urlTxtPath, videoPath, stardIdx, endIdx):
         # 等待上传完成并发布
         xiugaifengmianFlg = None
         while (xiugaifengmianFlg == None):
+            adbIns.tapFlgFromPic('android_douyin/pic_flag/jiazaishibai.png', 0.7)# 视频加载失败
             print('uploading...pls wait.')
             time.sleep(2)
             xiugaifengmianFlg = adbIns.FindFlgFromCap('android_douyin/pic_flag/xiugaifengmian.png', 0.9)
