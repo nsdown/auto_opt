@@ -38,7 +38,8 @@ def url2pdfLinux(filePath, startLine, endLine):
         virtkey_func.tapTab()
         virtkey_func.tapTab()
         virtkey_func.tapEnter()
-        virtkey_func.enterStr(line.split(' : ', 2)[0])
+        virtkey_func.tapCtrlChar('a')  # ctrl+a
+        virtkey_func.enterStr(line.split(' : ', 2)[0]+".pdf")
         virtkey_func.tapEnter()
 
         # print start
