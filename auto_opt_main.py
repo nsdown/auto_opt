@@ -9,7 +9,7 @@
 
 def main():
     print("main start")
-    caseFlg = 'douyin'
+    caseFlg = 'getEssay'
     print(caseFlg)
 
     if (caseFlg == 'douyin'):
@@ -27,11 +27,11 @@ def main():
 
     if(caseFlg == 'getEssay'):
         from android_wechat import get_gzh_essay
-        get_gzh_essay.getEssay('out/renmingribao.txt',False)
+        get_gzh_essay.getEssay('out/laodongfaku.txt',False)
 
     if (caseFlg == 'url2pdf'):
         from url2pdf import url2pdf
-        url2pdf.url2pdfLinux("out/renmingribao.txt", 1, 10000)
+        url2pdf.url2pdfLinux("out/laodongfaku.txt", 101, 10000)
 
 
 def test():
@@ -50,3 +50,4 @@ def test():
 if __name__ == "__main__":  #这里可以判断，当前文件是否是直接被python调用执行
     main()
     #test()
+

@@ -1,8 +1,4 @@
 .idea/
 *.pyc
 */__pycache__/
-venv
-screen_cap/
-wechat/*.txt
-out
 *.py___jb_tmp___

@@ -5,8 +5,8 @@
 @ env stetup：
 @ sudo apt install tesseract-ocr 下载chi_sim.traineddata 放到/usr/share/tesseract-ocr/4.00/tessdata
 (windows安装完后需要配置PATH,然后下载chi_sim.traineddata 放到C:\Program Files (x86)\Tesseract-OCR\tessdata),
-@ pip3 install pillow pytesseract matplotlib
-@ 需要安装app : https://github.com/majido/clipper
+@ pip3 install pillow pytesseract matplotlib aircv opencv-python
+@
 @ 0.screenSize:720x1280 DPI:320
 @ 1.打开微信公众号 -> 历史消息界面
 @
@@ -37,23 +37,24 @@ def getEssay(fileName, isToButtom):
     @ param
     @ exception
     @ notice
+    @   需要安装app : https://github.com/majido/clipper
     '''
     getEssaytimeStart = datetime.datetime.now()
     flgPos = None
     adb.dumpDeviceInfo()
     box = {'x1':0, 'y1':170, 'x2':500, 'y2':382} #目标标题的范围
     boxDeltaY = box['y2'] - box['y1']
-    startTopicCnt = 3   #最开始再目标标题范围之下的标题个数+1
+    startTopicCnt = 3   #最开始在目标标题范围之下的标题个数+1
     adb.runAdbCmd('shell am startservice ca.zgrs.clipper/.ClipboardService') #开启粘贴板adb通信service
 
     #-> 滑动到底部
     if(isToButtom):
         scrollToButtom()
 
-    fh = open(fileName, 'a+', encoding='utf-8')
     while True:
+        fh = open(fileName, 'a+', encoding='utf-8')
         timeStart = datetime.datetime.now()
-        capPath = 'screen_cap/screencap.png'
+        capPath = 'out/screencap.png'
         capPathXSize = 720
         capPathYSize = 1280
 
@@ -62,7 +63,7 @@ def getEssay(fileName, isToButtom):
             adb.pullScreenShot(capPath)
             FlgYList = getFlgFromPicVir(capPathXSize-20, capPath)
             if(len(FlgYList) < 2):
-                adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300)  # 实测4个像素点
+                adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300, 0)  # 实测4个像素点
                 print(FlgYList)
                 print('slite 3:------------------------------------------------------')
                 continue
@@ -81,13 +82,13 @@ def getEssay(fileName, isToButtom):
                     fh.close()
                     exit(0)
                 else:
-                    adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300)  # 实测4个像素点
+                    adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300, 0)  # 实测4个像素点
                     print(FlgYList)
                     print('slite 1:------------------------------------------------------')
             elif((abs(scrollDelta1) < 6) & (abs(scrollDelta2) < 6)): #通过高度卡目标区域，获取到目标区域，读图
                 break
             else: # 没滑动到位，继续一点一点往下滑动补偿，直到到位
-                adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300) #实测4个像素点
+                adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y1'] + 20, 300, 0) #实测4个像素点
                 print(FlgYList)
                 print('slite 2:------------------------------------------------------')
         # 保证滑动到位---end---
@@ -97,15 +98,11 @@ def getEssay(fileName, isToButtom):
 
         adb.adbTap((box['x1'] + box['x2'])/2,(box['y1'] + box['y2'])/2+startTopicCnt*boxDeltaY) #进入文章
 
-        while(flgPos == None): #等待界面出现
-            time.sleep(1)
-            flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_dot_option.png',0.85)
+        flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_dot_option.png',0.85, True, 2) # 等待文章加载2s
         adb.adbTap(flgPos[0], flgPos[1])
         flgPos = None
 
-        while (flgPos == None): #等待界面出现
-            time.sleep(1)
-            flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_cp_link.png', 0.85)
+        flgPos = adb.FindFlgFromCap('android_wechat/flag_pic/00_cp_link.png', 0.85, True, 0)
         adb.adbTap(flgPos[0], flgPos[1])
         flgPos = None
 
@@ -116,7 +113,6 @@ def getEssay(fileName, isToButtom):
         print(textLink)
         # 获取网址---end---
 
-        time.sleep(1)  # 反应时间
         adb.runAdbCmd('shell input keyevent KEYCODE_BACK') # [bug]存在偶现不起作用的问题
         time.sleep(1) #反应时间
 
@@ -125,12 +121,11 @@ def getEssay(fileName, isToButtom):
         if(startTopicCnt != 0): #保证底部几个都被读取到
             startTopicCnt -= 1
         else:
-            adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y2'] + scrollOffsite, 1000)
+            adb.adbSwipe(box['x1'], box['y1'], box['x1'], box['y2'] + scrollOffsite, 1000, 0)
 
+        fh.close()
         timeEnd = datetime.datetime.now()
-        print((timeEnd-timeStart).seconds) #时间差
-
-    fh.close()
+        print("Take time:" + str((timeEnd-timeStart).seconds) + "s") #时间差
 
     getEssaytimeEnd = datetime.datetime.now()
     timeDelta = (getEssaytimeEnd - getEssaytimeStart).seconds
@@ -149,8 +144,9 @@ def scrollToButtom():
     adb.pullScreenShot('')
     while True:
         adb.adbSwipe(CapXSize / 2, CapYSize * 4 / 5,
-                     CapXSize / 2, CapYSize / 5, 100)
-        if(adb.FindFlgFromCap('android_wechat/flag_pic/00_no_more.png', 0.8) != None):
+                     CapXSize / 2, CapYSize / 5, 100, 3) # 反应时间3s，否则可能一直加载不出来
+
+        if(adb.FindFlgFromCap('android_wechat/flag_pic/00_no_more.png', 0.8, False, 0) != None):
             print('scroll to end OK.')
             break
 
@@ -198,7 +194,7 @@ def getTextFromScreen(x1, y1, x2, y2):
     @ exception
     @ notice
     '''
-    filePath = 'screen_cap/screencap.png'
+    filePath = 'out/screencap.png'
     adb.pullScreenShot(filePath)
     return getTextFromPic(filePath, x1, y1, x2, y2)
 
@@ -221,12 +217,12 @@ def getFlgFromPicVir(x, filePath):
 
     yList = [] #空列表
     for y in range(ySize):
-        if(grey.getpixel((x,y)) == 229):
+        if((grey.getpixel((x,y)) >= 229) and (grey.getpixel((x,y)) <= 232)):
             yList.append(y) #添加列表项
     return yList
 
 def showImg():
-    img = Image.open('screen_cap/screencap.png')
+    img = Image.open('out/screencap.png')
     grey = img.convert('L')
     plt.imshow(grey)
     plt.show()

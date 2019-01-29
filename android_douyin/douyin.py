@@ -62,14 +62,10 @@ def getUrlFromDouyin(savePath):
     while True:
         print('--- 开始获取 ---')
         #input()
-        adbIns.adbSwipe(100, 600, 100, 30, 500)
-        time.sleep(0.3)
-        adbIns.tapFlgFromPic('android_douyin/pic_flag/share.png',0.75)
-        time.sleep(1)
-        adbIns.adbSwipe(500, 800, 10, 800, 500)
-        time.sleep(0.3)
-        adbIns.tapFlgFromPic('android_douyin/pic_flag/cp_link.png', 0.75)
-        time.sleep(1)
+        adbIns.adbSwipe(100, 600, 100, 30, 500, 0.3)
+        adbIns.tapFlgFromPic('android_douyin/pic_flag/share.png',0.75, False, 0, 1)
+        adbIns.adbSwipe(500, 800, 10, 800, 500, 0.3)
+        adbIns.tapFlgFromPic('android_douyin/pic_flag/cp_link.png', 0.75, False, 0, 1)
         saveDouyinUrl2Txt(savePath)
         time.sleep(0.5)
 
@@ -184,12 +180,11 @@ def uploadVideo2Qunmin(urlTxtPath, videoPath, stardIdx, endIdx):
         # 等待上传完成并发布
         xiugaifengmianFlg = None
         while (xiugaifengmianFlg == None):
-            adbIns.tapFlgFromPic('android_douyin/pic_flag/jiazaishibai.png', 0.7)# 视频加载失败
+            adbIns.tapFlgFromPic('android_douyin/pic_flag/jiazaishibai.png', 0.7, False, 0, 2)# 视频加载失败
             print('uploading...pls wait.')
-            time.sleep(2)
-            xiugaifengmianFlg = adbIns.FindFlgFromCap('android_douyin/pic_flag/xiugaifengmian.png', 0.9)
+            xiugaifengmianFlg = adbIns.FindFlgFromCap('android_douyin/pic_flag/xiugaifengmian.png', 0.9, False, 0)
         adbIns.adbTap(fabu_quanmin_axis[0], fabu_quanmin_axis[1]) # 传视频
-        while (adbIns.FindFlgFromCap('android_douyin/pic_flag/chuanshipin.png', 0.7) == None):
+        while (adbIns.FindFlgFromCap('android_douyin/pic_flag/chuanshipin.png', 0.7, False, 0) == None):
             time.sleep(2)
 
     adbIns.runAdbCmd('shell ime set com.iflytek.inputmethod/.FlyIME')  # 切换为讯飞输入法

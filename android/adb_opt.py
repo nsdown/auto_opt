@@ -14,6 +14,7 @@ import subprocess
 import platform
 import aircv as ac
 import cv2
+import time
 
 class AdbOpt():
     def __init__(self):
@@ -28,7 +29,7 @@ class AdbOpt():
         '''
         self.deviceIdList = {'Mate9':'3HX0217601006195',
                              }
-        self.deviceId = '' #创建类之后需要赋值 deviceId
+        self.deviceId = '3HX0217601006195' #创建类之后需要赋值 deviceId
         if platform.system() == 'Windows':
             adbToolPath = os.path.join("adb")
             self.option = ''
@@ -227,13 +228,14 @@ Python          :{python}
         print(cmd)
         self.runAdbCmd(cmd)
 
-    def adbSwipe(self, x1, y1, x2, y2, ms):
+    def adbSwipe(self, x1, y1, x2, y2, ms, delay):
         '''
         @ 从一点滑动到另一点
         @
         @ return
         @
         @ param
+        @       delay:swipe后delay多少秒返回，等待某些动作缓冲完成
         @ exception
         @ notice
         '''
@@ -246,6 +248,7 @@ Python          :{python}
         )
         print(cmd)
         self.runAdbCmd(cmd)
+        time.sleep(delay)
 
     def drawCircle(self, img, pos):
         '''
@@ -265,7 +268,7 @@ Python          :{python}
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def FindFlgFromCap(self, flgPath, confidenceVTH):
+    def FindFlgFromCap(self, flgPath, confidenceVTH, blockEn, findDelay):
         '''
         @ 在图片中找出特征图案
         @
@@ -273,40 +276,51 @@ Python          :{python}
         @
         @ param
         @    confidenceVTH:0.0-1.0
+        @    blockEn:是否阻塞等待flg出现
+        @    findDelay: 找到flg后延时findDelay秒后再返回
         @ exception
         @ notice    必须像素点匹配
         '''
         #process = subprocess.getoutput('date +%m%d%H%M%S')
         #date = process.replace('\n','')
         date = '' #不保存时间戳
-        screenshotPath = self.pullScreenShot('screen_cap/screencap'+date+'.png') # eg. screen_cap/cap1006120638.png
-        print(screenshotPath)
-        imsrc = ac.imread(screenshotPath)
-        imdst = ac.imread(flgPath)
-        pos = ac.find_template(imsrc, imdst)
-        if ((pos != None) and (pos['confidence'] > confidenceVTH)):
-            print('find a {para1}:{para2}'.format(para1=flgPath,para2=pos))
-            flgCenterPosInt = (int(pos['result'][0]), int(pos['result'][1]))
-            # draw_circle(imsrc, circleCenterPosInt)  # draw circle
-            #str(input('确定开始下一步？[y/n]:'))
-            return flgCenterPosInt
-        else:
-            print('Do not find {para1}\n'.format(para1=flgPath))
-            return None
+        while True:
+            screenshotPath = self.pullScreenShot('out/screencap' + date + '.png')  # eg. out/cap1006120638.png
+            print(screenshotPath)
+            imsrc = ac.imread(screenshotPath)
+            imdst = ac.imread(flgPath)
+            pos = ac.find_template(imsrc, imdst)
+            if ((pos != None) and (pos['confidence'] > confidenceVTH)):
+                print('find a {para1}:{para2}'.format(para1=flgPath,para2=pos))
+                flgCenterPosInt = (int(pos['result'][0]), int(pos['result'][1]))
+                time.sleep(findDelay)
+                # draw_circle(imsrc, circleCenterPosInt)  # draw circle
+                #str(input('确定开始下一步？[y/n]:'))
+                return flgCenterPosInt
+            elif (blockEn == False):
+                print('Do not find {para1}\n'.format(para1=flgPath))
+                return None
+            else:
+                print('wait for {para1}\n'.format(para1=flgPath))
+                time.sleep(1)
 
-    def tapFlgFromPic(self, flgPath, confidenceVTH):
+    def tapFlgFromPic(self, flgPath, confidenceVTH, blockEn, findDelay, tapDelay):
         '''
         @ 单击图片中的特征图案
         @
         @ return True/False
         @
         @ param
+        @       blockEn(bool):是否阻塞等待flg出现
+        @       findDelay:找到flg后延时findDelay秒后再点击flg
+        @       delayTime:tap后延时时间返回，做某些动作的缓冲时间，单位秒
         @ exception
         @ notice    必须像素点匹配
         '''
-        flgCenterPosInt = self.FindFlgFromCap(flgPath, confidenceVTH)
+        flgCenterPosInt = self.FindFlgFromCap(flgPath, confidenceVTH, blockEn, findDelay)
         if (flgCenterPosInt != None):
             self.adbTap(flgCenterPosInt[0], flgCenterPosInt[1])
+            time.sleep(tapDelay)
             return True
         else:
             return False
