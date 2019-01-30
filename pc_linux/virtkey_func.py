@@ -4,7 +4,10 @@
 @ Copyright (C) 2018        EfonFighting(email:efonfighting@126.com)(android_wechat:Efon-fighting)
 @
 @ env stetup：
-@  virtkey : https://launchpad.net/virtkey (sudo python3.6 setup.py install)
+@  virtkey : https://launchpad.net/virtkey
+@           sudo apt-get install python3-pip build-essential python3-dev libssl-dev libffi-dev libxml2 libxml2-dev libxslt1-dev zlib1g-dev libgtk2.0-dev python3-virtkey xsel xclip
+@           sudo python3.6 setup.py install
+@
 @
 '''
 

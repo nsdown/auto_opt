@@ -27,7 +27,7 @@ def url2pdfLinux(filePath, startLine, endLine):
         cnt = cnt + 1
         if ((cnt < startLine) | (cnt > endLine)):
             continue
-
+        print(line)
         webbrowser.open(line.split(' : ', 2)[1])
         virtkey_func.tapPageDownToEnd() #让图片缓冲出来
         time.sleep(2) # 让网页缓冲完成

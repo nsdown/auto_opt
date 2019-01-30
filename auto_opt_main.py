@@ -9,7 +9,7 @@
 
 def main():
     print("main start")
-    caseFlg = 'getEssay'
+    caseFlg = 'url2pdf'
     print(caseFlg)
 
     if (caseFlg == 'douyin'):
