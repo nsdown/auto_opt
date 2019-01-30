@@ -24,35 +24,37 @@ def url2pdfLinux(filePath, startLine, endLine):
     url2pdfStart = datetime.datetime.now()
     cnt = 0
     for line in open(filePath):
+        start = time.time()
         cnt = cnt + 1
         if ((cnt < startLine) | (cnt > endLine)):
             continue
         print(line)
         webbrowser.open(line.split(' : ', 2)[1])
         virtkey_func.tapPageDownToEnd() #让图片缓冲出来
-        time.sleep(2) # 让网页缓冲完成
 
-        virtkey_func.tapCtrlChar('p') # ctrl+p
+        virtkey_func.tapCtrlChar('p', 0.3) # ctrl+p
 
         # rename pdf titile
-        virtkey_func.tapTab()
-        virtkey_func.tapTab()
-        virtkey_func.tapEnter()
-        virtkey_func.tapCtrlChar('a')  # ctrl+a
-        virtkey_func.enterStr(line.split(' : ', 2)[0]+".pdf")
-        virtkey_func.tapEnter()
+        virtkey_func.tapTab(0.3)
+        virtkey_func.tapTab(0.3)
+        virtkey_func.tapEnter(0.3)
+        virtkey_func.tapCtrlChar('a', 0)  # ctrl+a
+        virtkey_func.enterStr(line.split(' : ', 2)[0]+".pdf", 0.3)
+        virtkey_func.tapEnter(0.3)
 
         # print start
-        virtkey_func.tapTab()
-        virtkey_func.tapTab()
-        virtkey_func.tapTab()
-        virtkey_func.tapEnter()
+        virtkey_func.tapTab(0.3)
+        virtkey_func.tapTab(0.3)
+        virtkey_func.tapTab(0.3)
+        virtkey_func.tapEnter(0.3)
         time.sleep(8)
-        virtkey_func.tapEnter() # 如果重名冲突，按替换再打印（可优化）
+        virtkey_func.tapEnter(0.3) # 如果重名冲突，按替换再打印（可优化）
         time.sleep(8)
 
         # 关闭browser
-        virtkey_func.tapCtrlChar('w')
+        virtkey_func.tapCtrlChar('w', 0.3)
+        end = time.time()
+        print('-----Take time:%s' % str(end - start))
 
     #统计耗时
     url2pdfEnd = datetime.datetime.now()

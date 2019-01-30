@@ -14,40 +14,73 @@
 import virtkey
 import pyperclip
 import time
+import pyscreenshot as ImageGrab
+import os
+import aircv as ac
 
-tapTime = 0.5
-
-def tapEnter():
+def tapEnter(delay):
     v = virtkey.virtkey()  # 调用系统键盘
     v.press_keysym(65421) # enter
     v.release_keysym(65421)
-    time.sleep(tapTime)
+    time.sleep(delay)
 
-def tapCtrlChar(char):
+def tapCtrlChar(char, delay):
     v = virtkey.virtkey()  # 调用系统键盘
     v.press_keysym(65507)  # Ctrl键位
     v.press_unicode(ord(char))  # 模拟字母V
     v.release_unicode(ord(char))
     v.release_keysym(65507)
-    time.sleep(tapTime)
+    time.sleep(delay)
 
-def tapTab():
+def tapTab(delay):
     v = virtkey.virtkey()  # 调用系统键盘
     v.press_keysym(65289) # Tab
     v.release_keysym(65289)
-    time.sleep(tapTime)
+    time.sleep(delay)
 
-def enterStr(stringVal):
+def enterStr(stringVal, delay):
     pyperclip.copy(stringVal)
-    tapCtrlChar('v')
-    time.sleep(tapTime)
+    tapCtrlChar('v', 0.3)
+    time.sleep(delay)
 
 def tapPageDownToEnd():
+    '''
+    @ 通过判断屏幕是否改变来判断是否到底了，并做2min超时
+    @
+    @ return
+    @
+    @ param
+    @ exception
+    @ notice
+    @   需要安装截屏库pyscreenshot
+    '''
+    srcImg = 'out/screen0.png'
+    dstImg = 'out/screen1.png'
+    start = time.time()
     v = virtkey.virtkey()  # 调用系统键盘
-    for i in range(20):
+    while True:
+        ImageGrab.grab_to_file(srcImg)
         v.press_keysym(65366)
         v.release_keysym(65366)
-        time.sleep(tapTime)
+        time.sleep(0.5)
+        ImageGrab.grab_to_file(dstImg)
+        imsrc = ac.imread(srcImg)
+        imdst = ac.imread(dstImg)
+        pos = ac.find_template(imsrc, imdst)
+        if(pos == None):
+            print('---pos is None---')
+        elif(pos['confidence'] > 0.97):
+            print('---confidence %s , break---' % str(pos['confidence']))
+            break
+        else:
+            print('---confidence %s---' % str(pos['confidence']))
+
+        end = time.time()
+        if((end - start) > 120): #2min
+            print('---time out,break.---')
+            break
+    os.remove(srcImg)
+    os.remove(dstImg)
 
 '''
 keysym	.keycode	.keysym_num	Key
